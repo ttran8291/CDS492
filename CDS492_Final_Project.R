@@ -1,3 +1,4 @@
+# packages I needed for my visualizations
 library(tidyverse)
 library(ggplot2)
 library(broom)
@@ -12,10 +13,8 @@ college_reduced <- college %>%
   select(INSTNM, CITY, STABBR, REGION, ADM_RATE, C100_4)
 
 # removes any rows with missing values
-college_reduced[is.na(college_reduced) | college_reduced == "Inf"] = NA
+college_reduced[is.na(college_reduced) | college_reduced == "NULL"] = NA
 college_reduced <- na.omit(college_reduced)
-
-
 
 
 # renamed the columns so it's more understandable
@@ -59,33 +58,29 @@ college_reduced %>%
   )
 
 
-
+# this creates a linear regression model
 college_model <- lm(completion_rate_4yr_100nt ~ admission_rate_overall, 
                        data = college_reduced)
 college_model %>%
   tidy()
 
+#finds the r squared value for the regression line which was found to be 0.877
 college_model %>%
   glance() %>%
   select(r.squared)
 
-college_df <- college_reduced %>%
-  add_predictions(college_model) %>%
-  add_residuals(college_model)
+# adds a column for residual and prediction values and tells us if the model is
+# appropriate for linear regression. In this case it is since points are scattered
+# evenly above and below the residual line
+college_reduced$residuals <- residuals(college_model)
+college_reduced$predictions <- predict(college_model)
 
-ggplot(college_df) +
-  geom_point(mapping = aes(x = completion_rate_4yr_100nt, y = admission_rate_overall)) +
-  geom_line(
-    mapping = aes(x = completion_rate_4yr_100nt, y = pred),
-    color = "indianred3",
-    size = 1
-  ) +
-  geom_linerange(
-    mapping = aes(x = completion_rate_4yr_100nt, ymin = pred, ymax = admission_rate_overall),
-    linetype = "dashed"
-  ) +
-  labs(
-    title = 'Plot of Residuals of Completion Rate and Admission Rate',
-    x = 'Completion Rate (within 4 years)',
-    y = 'Admission Rate'
-  )
+# creates a predicted and residuals plot
+college_reduced %>%
+  ggplot() +
+  geom_point(mapping = aes(x = predictions, y = residuals)) +
+  geom_hline(aes(yintercept = 0)) + 
+  labs(title = "Residual vs Predicted Plot
+                of College Model Data",
+       x = 'Predicted',
+       y = "Residuals")

@@ -1,2 +1,3 @@
 # CDS492
-Work and progress for my CDS492 course
+
+This project was done in order to see if college admission rates and completion/graduation rates within 4 years have any correlation with one another. Since most people worry about getting into a good school and most good schools tend to have lower acceptance rates, I wanted to see if these acceptance rates really affect when students graduate since there are so many factors that could lead to a student not graduating on time. In order to achieve this goal, I created visualizations between the two variables which included faceted scatter plots and a linear regression model. The dataset used for this project can be found here https://collegescorecard.ed.gov/data/ under the “Most Recent Institution-Level Data” link. I hypothesize that college admission rates and completion rates within 4 years have no correlation to one another.

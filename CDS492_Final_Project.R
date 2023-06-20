@@ -84,3 +84,10 @@ college_reduced %>%
                 of College Model Data",
        x = 'Predicted',
        y = "Residuals")
+
+# creates a linear regression plot
+ggplot(data = college_reduced, aes(x = admission_rate_overall, y = completion_rate_4yr_100nt)) +
+  geom_point() +
+  geom_abline(intercept = coef(college_model)[1], slope = coef(college_model)[2], color = "red") +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Admission Rate", y = "Completion Rate (within 4 years)", title = "Linear Regression Plot")
